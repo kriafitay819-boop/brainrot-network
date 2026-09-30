@@ -94,5 +94,6 @@ Locales.he = {
     editor_saved     = 'נשמרו %d נקודות עפרה',
     reset_done       = 'כל העפרות חזרו',
     xp_set           = 'ניתנו %d XP לשחקן %d',
+    coords_copied    = 'הועתק: %s',
     no_permission    = 'אין לך הרשאה',
 }

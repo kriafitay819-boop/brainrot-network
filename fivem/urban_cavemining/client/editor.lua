@@ -80,3 +80,11 @@ RegisterNetEvent('urban_cavemining:client:toggleEditor', function()
         CreateThread(editorLoop)
     end
 end)
+
+RegisterNetEvent('urban_cavemining:client:printCoords', function()
+    local pos = GetEntityCoords(cache.ped)
+    local text = ('vec4(%.2f, %.2f, %.2f, %.1f)'):format(pos.x, pos.y, pos.z, GetEntityHeading(cache.ped))
+    print('[urban_cavemining] ' .. text)
+    lib.setClipboard(text)
+    Bridge.notify(L('coords_copied', text), 'success')
+end)

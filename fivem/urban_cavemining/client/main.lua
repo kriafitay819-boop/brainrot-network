@@ -194,7 +194,7 @@ end
 
 CreateThread(function()
     local b = Locations.Cave.blip
-    if b.enabled then makeBlip(b.coords, b.sprite, b.color, b.scale, L('blip_cave')) end
+    if b.enabled then makeBlip(Locations.Cave.entrance.xyz, b.sprite, b.color, b.scale, L('blip_cave')) end
     for i = 1, #Locations.WaterSpots do
         local spot = Locations.WaterSpots[i]
         makeBlip(spot.coords, spot.sprite, spot.color, 0.7, L('blip_' .. spot.label))

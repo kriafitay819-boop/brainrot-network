@@ -122,6 +122,12 @@ for _, f in ipairs(files) do
     local chunk, err = loadfile(ROOT .. f)
     if not chunk then error(err) end
     chunk()
+    if f == 'config.lua' then
+        -- deterministic run: no random tool / gem breakage (stations copy these at load)
+        Config.JewelCutting.failChance = 0
+        Config.JewelCutting.drillbitBreakChance = 0
+        Config.Cracking.drillbitBreakChance = 0
+    end
 end
 print = realPrint
 Config.Locale = 'en'
@@ -283,8 +289,6 @@ check(okT == false and errT == L('not_enough'), 'not enough ore')
 --──────────────────────────────── jewel bench ────────────────────────────
 standAt(S, Locations.JewelCutting[1].coords)
 bag(S).uncut_ruby, bag(S).drillbit = 3, 5
-Config.JewelCutting.failChance = 0
-Config.JewelCutting.drillbitBreakChance = 0
 dur = call('urban_cavemining:beginRecipe', S, 'cut', 1, 3)
 tick(dur)
 call('urban_cavemining:finishRecipe', S)

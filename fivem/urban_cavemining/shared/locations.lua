@@ -7,11 +7,13 @@ Locations = {}
 
 Locations.Cave = {
     center = vec3(2889.014, 2664.655, 41.72483),
-    radius = 175.0,      -- "inside the mine" radius (ore streaming, headlamp onlyInCave)
+    radius = 175.0,      -- "inside the mine" radius (ore streaming, headlamp onlyInCave, foot dust)
+    -- mine portal in the quarry wall (x, y, z, heading looking INTO the cave).
+    -- Stand in the opening in-game and run /cavecoords to get your exact value.
+    entrance = vec4(2937.98, 2744.81, 43.28, 102.0),
     blip = {
         enabled = true,
-        coords  = vec3(2937.98, 2744.81, 43.28),   -- cave entrance
-        sprite  = 527, color = 81, scale = 0.85,
+        sprite  = 527, color = 81, scale = 0.85,   -- placed on the entrance
     },
 }
 

@@ -37,3 +37,10 @@ RegisterNetEvent('urban_cavemining:server:editorRemove', function(slotId)
     Bridge.notify(src, L('editor_removed', slotId), 'success')
     Bridge.notify(src, L('editor_saved', #positions), 'inform')
 end)
+
+lib.addCommand(Config.Admin.coordsCommand, {
+    help = 'Print + copy your position (for the cave entrance / ore spots)',
+    restricted = Config.Admin.group,
+}, function(source)
+    if source > 0 then TriggerClientEvent('urban_cavemining:client:printCoords', source) end
+end)

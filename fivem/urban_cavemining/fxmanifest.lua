@@ -28,6 +28,7 @@ client_scripts {
     'client/stations.lua',
     'client/water.lua',
     'client/headlamp.lua',
+    'client/footsteps.lua',
     'client/editor.lua',
 }
 

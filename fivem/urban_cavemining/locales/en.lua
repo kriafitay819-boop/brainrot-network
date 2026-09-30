@@ -94,5 +94,6 @@ Locales.en = {
     editor_saved     = 'Saved %d ore spots',
     reset_done       = 'All ores respawned',
     xp_set           = 'Gave %d XP to player %d',
+    coords_copied    = 'Copied: %s',
     no_permission    = 'No permission',
 }

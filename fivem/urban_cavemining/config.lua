@@ -313,6 +313,17 @@ Config.Headlamp = {
 }
 
 --──────────────────────────────────────────────────────────────────────────────
+--  FOOT DUST  (sand / dirt kicked up by every footstep inside the mine)
+--──────────────────────────────────────────────────────────────────────────────
+Config.FootDust = {
+    enabled = true,
+    asset = 'core',
+    effects = { 'bang_sand', 'bang_dirt' },   -- one is picked per step
+    scale = 0.38,                             -- walking; running / sprinting scale up
+    requireInterior = false,                  -- true = only inside an MLO interior (e.g. the K4MB1 cave)
+}
+
+--──────────────────────────────────────────────────────────────────────────────
 --  ADMIN
 --──────────────────────────────────────────────────────────────────────────────
 Config.Admin = {
@@ -320,4 +331,5 @@ Config.Admin = {
     editorCommand = 'caveeditor', -- place / remove ore spots in-game (saved to data/positions.json)
     resetCommand  = 'cavereset',  -- respawn every ore now
     xpCommand     = 'cavexp',     -- /cavexp [id] [amount]
+    coordsCommand = 'cavecoords', -- prints + copies your position (use it to set the entrance / spots)
 }
