@@ -11,6 +11,16 @@ Config.Inventory = 'auto'    -- 'auto' | 'ox' | 'qb' | 'esx'   ('qb' also covers
 Config.Target    = 'auto'    -- 'auto' | 'ox' | 'qb' | 'none'  ('none' = [E] prompts from ox_lib)
 
 Config.Job       = nil       -- e.g. 'miner' to restrict mining + stations to one job. nil = everyone
+
+-- Mine foreman at the quarry entrance: players can take / quit the miner job themselves.
+-- The job itself must exist in your framework (install/qb_jobs.lua, install/qbx_jobs.lua, install/esx_jobs.sql)
+Config.JobCenter = {
+    enabled   = true,
+    job       = 'miner',
+    grade     = 0,
+    quitJob   = 'unemployed',   -- job you get when you quit
+    quitGrade = 0,
+}
 Config.PayWith   = 'cash'    -- 'cash' | 'bank' (shop purchases + buyer payouts)
 
 -- Ore prop set:

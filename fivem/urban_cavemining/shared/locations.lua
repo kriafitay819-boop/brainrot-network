@@ -17,6 +17,13 @@ Locations.Cave = {
     },
 }
 
+-- mine foreman outside the portal (take / quit the miner job)
+Locations.Foreman = {
+    coords   = vec4(2944.2, 2748.6, 43.25, 280.0),
+    model    = 's_m_y_construct_02',
+    scenario = 'WORLD_HUMAN_CLIPBOARD',
+}
+
 Locations.Shop = {
     coords   = vec4(2908.8, 2643.6, 43.26, 328.32),
     model    = 'g_m_m_chemwork_01',

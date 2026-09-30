@@ -70,6 +70,39 @@ function Bridge.hasJob(src)
     return Bridge.getJob(src) == Config.Job
 end
 
+function Bridge.jobExists(name, grade)
+    if framework == 'qbx' then
+        local ok, job = pcall(function() return exports.qbx_core:GetJob(name) end)
+        return ok and job ~= nil
+    elseif framework == 'qb' then
+        return QBCore.Shared.Jobs[name] ~= nil
+    elseif framework == 'esx' then
+        if ESX.DoesJobExist then return ESX.DoesJobExist(name, grade or 0) end
+        return true
+    end
+    return false
+end
+
+--- Replaces the player's job (police -> miner etc.)
+function Bridge.setJob(src, name, grade)
+    grade = grade or 0
+    local player = getPlayer(src)
+    if not player then return false end
+    if framework == 'qbx' then
+        local ok = pcall(function() exports.qbx_core:SetJob(src, name, grade) end)
+        if not ok and player.Functions and player.Functions.SetJob then
+            ok = player.Functions.SetJob(name, grade)
+        end
+        return ok and true or false
+    elseif framework == 'qb' then
+        return player.Functions.SetJob(name, grade) and true or false
+    elseif framework == 'esx' then
+        player.setJob(name, grade)
+        return true
+    end
+    return false
+end
+
 --──────────────────────────────── money ──────────────────────────────────
 
 local function esxAccount()

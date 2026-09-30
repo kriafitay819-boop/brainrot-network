@@ -167,3 +167,24 @@ lib.callback.register('urban_cavemining:finishLoot', function(src)
     Server.addXp(src, data.amount)
     return true
 end)
+
+--──────────────────────────────── job center (foreman) ───────────────────
+
+lib.callback.register('urban_cavemining:takeJob', function(src)
+    local jc = Config.JobCenter
+    if not jc.enabled then return false end
+    if not Server.near(src, Locations.Foreman.coords, STATION_RANGE) then return false, L('too_far') end
+    if Bridge.getJob(src) == jc.job then return false, L('already_miner') end
+    if not Bridge.jobExists(jc.job, jc.grade) then return false, L('job_missing') end
+    if not Bridge.setJob(src, jc.job, jc.grade) then return false, L('job_failed') end
+    return true, L('job_taken')
+end)
+
+lib.callback.register('urban_cavemining:quitJob', function(src)
+    local jc = Config.JobCenter
+    if not jc.enabled then return false end
+    if not Server.near(src, Locations.Foreman.coords, STATION_RANGE) then return false, L('too_far') end
+    if Bridge.getJob(src) ~= jc.job then return false, L('not_miner') end
+    if not Bridge.setJob(src, jc.quitJob, jc.quitGrade) then return false, L('job_failed') end
+    return true, L('job_quit')
+end)

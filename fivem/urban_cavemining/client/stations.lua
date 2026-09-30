@@ -384,6 +384,36 @@ local function createWorld()
     end
 end
 
+local foremanPed
+
+local function jobAction(callback)
+    local ok, message = lib.callback.await(callback, false)
+    if message then Bridge.notify(message, ok and 'success' or 'error') end
+end
+
+local foremanPoint = lib.points.new({ coords = Locations.Foreman.coords.xyz, distance = 90.0 })
+
+function foremanPoint:onEnter()
+    if not Config.JobCenter.enabled or foremanPed then return end
+    foremanPed = spawnPed(Locations.Foreman)
+    if not foremanPed then return end
+    Bridge.addEntity('urban_cavemining_foreman', foremanPed, {
+        { label = L('take_job'), icon = 'fas fa-helmet-safety', onSelect = function() jobAction('urban_cavemining:takeJob') end },
+        { label = L('quit_job'), icon = 'fas fa-door-open', onSelect = function() jobAction('urban_cavemining:quitJob') end },
+        { label = L('target_level'), icon = 'fas fa-star', onSelect = function()
+            Client.xp = lib.callback.await('urban_cavemining:getXp', false) or Client.xp
+            Bridge.notify(Client.levelText(), 'inform')
+        end },
+    })
+end
+
+function foremanPoint:onExit()
+    if not foremanPed then return end
+    Bridge.removeEntity('urban_cavemining_foreman', foremanPed)
+    if DoesEntityExist(foremanPed) then DeleteEntity(foremanPed) end
+    foremanPed = nil
+end
+
 local function destroyWorld()
     for name, ped in pairs(spawned.peds) do
         Bridge.removeEntity('urban_cavemining_' .. name, ped)
@@ -424,5 +454,7 @@ CreateThread(function()
 end)
 
 AddEventHandler('onResourceStop', function(name)
-    if name == GetCurrentResourceName() then destroyWorld() end
+    if name ~= GetCurrentResourceName() then return end
+    destroyWorld()
+    if foremanPed and DoesEntityExist(foremanPed) then DeleteEntity(foremanPed) end
 end)

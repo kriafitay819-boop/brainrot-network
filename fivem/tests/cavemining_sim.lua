@@ -81,14 +81,16 @@ lib = {
 }
 
 --──────────────────────────────── qbx_core + ox_inventory ────────────────
-local inv, money = {}, {}
+local inv, money, jobs = {}, {}, {}
 local function bag(src) inv[src] = inv[src] or {} return inv[src] end
 exports = {
     qbx_core = {
         GetPlayer = function(_, src)
             money[src] = money[src] or { cash = 0, bank = 0 }
-            return { PlayerData = { citizenid = 'CID' .. src, job = { name = 'unemployed' }, money = money[src] } }
+            return { PlayerData = { citizenid = 'CID' .. src, job = { name = jobs[src] or 'police' }, money = money[src] } }
         end,
+        GetJob = function(_, name) return (name == 'miner' or name == 'unemployed') and { label = name } or nil end,
+        SetJob = function(_, src, name, grade) jobs[src] = name end,
         AddMoney = function(_, src, kind, amount) money[src][kind] = money[src][kind] + amount return true end,
         RemoveMoney = function(_, src, kind, amount)
             if money[src][kind] < amount then return false end
@@ -343,6 +345,29 @@ standAt(S, Locations.Buyer.coords)
 local cash = money[S].cash
 local okS = call('urban_cavemining:sell', S, 'ruby_ring', 5)
 check(okS == true and bag(S).ruby_ring == 0 and money[S].cash == cash + Config.Buyer.prices.ruby_ring, 'sold ring (amount clamped)')
+
+--──────────────────────────────── job center ─────────────────────────────
+local J = 3
+standAt(J, vec3(0, 0, 0))
+local okF = call('urban_cavemining:takeJob', J)
+check(okF == false, 'job center checks distance')
+standAt(J, Locations.Foreman.coords)
+check(Bridge.getJob(J) == 'police', 'player starts as police')
+local okJ, msgJ = call('urban_cavemining:takeJob', J)
+check(okJ == true and msgJ == L('job_taken') and Bridge.getJob(J) == 'miner', 'police -> miner')
+local okA, msgA = call('urban_cavemining:takeJob', J)
+check(okA == false and msgA == L('already_miner'), 'cannot take the job twice')
+Config.Job = 'miner'
+check(Bridge.hasJob(J), 'miner passes the job gate')
+local okQ = call('urban_cavemining:quitJob', J)
+check(okQ == true and Bridge.getJob(J) == 'unemployed', 'quit the mine')
+check(not Bridge.hasJob(J), 'job gate blocks after quitting')
+Config.Job = nil
+local saveJC = Config.JobCenter.job
+Config.JobCenter.job = 'astronaut'
+local okM, msgM = call('urban_cavemining:takeJob', J)
+check(okM == false and msgM == L('job_missing'), 'missing job is reported')
+Config.JobCenter.job = saveJC
 
 --──────────────────────────────── editor ─────────────────────────────────
 source = S
